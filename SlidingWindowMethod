@@ -1,0 +1,55 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    /// <summary>
+    /// キューを利用したスライディングウィンドウ法での解き方
+    /// 「配列内にある特定の範囲（ウィンドウサイズ）の配列に着目してアプローチを行い,
+    /// アプローチ後に範囲をひとつずらして, またアプローチをする」という方法を繰り返していくアルゴリズム
+    /// </summary>
+    static void Main()
+    {
+        // 入力を受け取る
+        var input = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
+        int n = input[0]; // 配列のサイズ
+        int x = input[1]; // 連続する要素の数
+
+        int[] seq = Array.ConvertAll(Console.ReadLine().Split(), int.Parse); // 数列
+
+        // キューを用意
+        Queue<int> window = new Queue<int>();
+
+        int maxSum = int.MinValue; // 最大和
+        int maxStartValue = 0; // 最大和の左端の値
+        int currentSum = 0; // 現在のウィンドウの和
+
+        // 最初のウィンドウを準備
+        for (int i = 0; i < x; i++)
+        {
+            window.Enqueue(seq[i]);
+            currentSum += seq[i];
+        }
+
+        maxSum = currentSum;
+        maxStartValue = seq[0];
+
+        // ウィンドウをスライド
+        for (int i = x; i < n; i++)
+        {
+            currentSum -= window.Dequeue(); // 古い要素を削除しつつ和を更新
+            window.Enqueue(seq[i]); // 新しい要素を追加
+            currentSum += seq[i]; // 和を更新
+
+            // 最大値を更新
+            if (currentSum > maxSum)
+            {
+                maxSum = currentSum;
+                maxStartValue = window.Peek(); // 現在のウィンドウの左端の値
+            }
+        }
+
+        // 結果を出力
+        Console.WriteLine($"{maxSum} {maxStartValue}");
+    }
+}
