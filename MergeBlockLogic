@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        var nums = Array.ConvertAll(Console.ReadLine().Split(), int.Parse); //ボールに書かれた数字
+
+        Stack<int> stack = new Stack<int>();
+        
+        foreach (var num in nums)
+        {
+            stack.Push(num);
+
+            // 直前のボールと統合可能なら繰り返し統合する
+            while (stack.Count > 1)
+            {
+                int top = stack.Pop(); // 現在のボール
+                int second = stack.Pop(); // 1つ前のボール
+
+                if (top == second)
+                {
+                    stack.Push(top * 2); // 統合して 2 倍
+                }
+                else
+                {
+                    stack.Push(second); // 戻す
+                    stack.Push(top);
+                    break; // もう統合できない
+                }
+            }
+        }
+    }
+}
